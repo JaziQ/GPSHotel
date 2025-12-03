@@ -21,7 +21,7 @@ public class Address {
     private String city;
 
     @NotBlank(message = "Country is mandatory")
-    private String county;
+    private String country;
 
     @NotBlank(message = "Postal Code is mandatory")
     private String postalCode;
