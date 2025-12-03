@@ -7,8 +7,14 @@ import jazi.gpshotel.model.entity.ArrivalTime;
 import jazi.gpshotel.model.entity.Contacts;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class HotelDto {
+
+    @NotNull
+    private Long id;
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 
@@ -28,4 +34,35 @@ public class HotelDto {
 
     @Valid
     private ArrivalTime arrivalTime;
+
+    private String formattedAddress;
+    private String phone;
+
+    private List<String> amenities;
+
+    public static HotelDto createShortDto(Long id, String name, String description, String formattedAddress, String phone) {
+        HotelDto hotelDto = new HotelDto();
+
+        hotelDto.setId(id);
+        hotelDto.setName(name);
+        hotelDto.setDescription(description);
+        hotelDto.setFormattedAddress(formattedAddress);
+        hotelDto.setPhone(phone);
+        return hotelDto;
+    }
+
+    public static HotelDto createFullDto(Long id, String name, String description,
+                                         String brand, Address address, Contacts contacts,
+                                         ArrivalTime arrivalTime, List<String> amenities) {
+        HotelDto hotelDto = new HotelDto();
+        hotelDto.setId(id);
+        hotelDto.setName(name);
+        hotelDto.setDescription(description);
+        hotelDto.setBrand(brand);
+        hotelDto.setAddress(address);
+        hotelDto.setContacts(contacts);
+        hotelDto.setArrivalTime(arrivalTime);
+        hotelDto.setAmenities(amenities);
+        return hotelDto;
+    }
 }
