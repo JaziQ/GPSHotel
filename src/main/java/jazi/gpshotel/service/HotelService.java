@@ -51,13 +51,24 @@ public class HotelService {
     }
 
     @Transactional
-    public Optional<HotelFullDto> addAmenitiesToHotel(Long id, List<String> amenities) {
-        return hotelRepository.findById(id)
-                .map(hotel -> {
-                    hotel.getAmenities().addAll(amenities);
-                    hotelRepository.save(hotel);
-                    return mapper.toFullDto(hotel);
-                });
+    public HotelFullDto addAmenitiesToHotel(Long id, List<String> amenities) {
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
+
+        if (amenities != null && !amenities.isEmpty()) {
+            List<String> currentAmenities = hotel.getAmenities();
+            Set<String> currentSet = new HashSet<>(currentAmenities);
+
+            List<String> uniqueToAdd = amenities.stream()
+                    .filter(amenity -> !currentSet.contains(amenity))
+                    .toList();
+
+            if (!uniqueToAdd.isEmpty()) {
+                currentAmenities.addAll(uniqueToAdd);
+            }
+        }
+
+        return mapper.toFullDto(hotel);
     }
 
 }
