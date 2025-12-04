@@ -71,4 +71,26 @@ public class HotelService {
         return mapper.toFullDto(hotel);
     }
 
+    public List<HotelShortDto> searchHotels(String name, String brand, String city, String country, String amenity) {
+        List<Hotel> hotels = new ArrayList<>();
+
+        if (name != null) {
+            hotels = hotelRepository.findHotelsByNameIgnoreCase(name);
+        }
+        if (brand != null) {
+            hotels = hotelRepository.findHotelsByBrandIgnoreCase(brand);
+        }
+        if (city != null) {
+            hotels = hotelRepository.findHotelsByCity(city);
+        }
+        if (country != null) {
+            hotels = hotelRepository.findHotelsByCountry(country);
+        }
+        if (amenity != null) {
+            hotels = hotelRepository.findHotelsByAmenities(amenity);
+        }
+        return hotels.stream()
+                .map(mapper::toShortDto)
+                .toList();
+    }
 }

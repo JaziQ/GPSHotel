@@ -52,18 +52,37 @@ public class HotelController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<HotelShortDto>> searchHotels(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String amenities) {
+
+        try {
+            if (name == null && brand == null && city == null && country == null && amenities == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            List<HotelShortDto> results = hotelService.searchHotels(name, brand, city, country, amenities);
+            return ResponseEntity.ok(results);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Collections.emptyList());
+        }
+    }
+
     @PostMapping("/hotels/{id}/amenities")
     public ResponseEntity<HotelFullDto> addAmenities(
             @PathVariable Long id,
             @RequestBody List<String> amenities) {
-        try{
+        try {
             HotelFullDto hotelFullDto = hotelService.addAmenitiesToHotel(id, amenities);
             if (hotelFullDto == null) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        catch(EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
