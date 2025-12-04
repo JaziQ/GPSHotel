@@ -12,7 +12,8 @@ import java.util.List;
 public class Hotel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hotel_seq")  // ← SEQUENCE!
+    @SequenceGenerator(name = "hotel_seq", sequenceName = "HOTEL_SEQ", allocationSize = 1)
     private Long id;
 
     @NotBlank(message = "Hotel name is mandatory")

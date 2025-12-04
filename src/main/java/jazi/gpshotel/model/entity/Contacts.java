@@ -11,7 +11,7 @@ import lombok.Data;
 public class Contacts {
 
     @NotBlank(message = "Phone number is mandatory")
-    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$",
+    @Pattern(regexp = "^\\+?[0-9\\s\\-()]{7,30}$",
             message = "Invalid phone number format")
     private String phone;
 
