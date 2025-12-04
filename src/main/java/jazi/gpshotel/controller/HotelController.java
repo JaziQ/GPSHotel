@@ -4,19 +4,25 @@ import jakarta.persistence.EntityNotFoundException;
 import jazi.gpshotel.model.dto.HotelFullDto;
 import jazi.gpshotel.model.dto.HotelShortDto;
 import jazi.gpshotel.service.HotelService;
+import jazi.gpshotel.service.HotelStatisticsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@RequestMapping("/property-view")
 public class HotelController {
 
     private final HotelService hotelService;
+    private final HotelStatisticsService hotelStatisticsService;
 
-    public HotelController(HotelService hotelService) {
+    public HotelController(HotelService hotelService, HotelStatisticsService hotelStatisticsService) {
         this.hotelService = hotelService;
+        this.hotelStatisticsService = hotelStatisticsService;
     }
 
     @GetMapping("/hotels")
@@ -84,6 +90,17 @@ public class HotelController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/histogram/{param}")
+    public ResponseEntity<Map<String, Integer>> getHistogram(@PathVariable String param) {
+        try {
+            Map<String, Integer> result = hotelStatisticsService.getHistogram(param);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Collections.emptyMap());
         }
     }
 

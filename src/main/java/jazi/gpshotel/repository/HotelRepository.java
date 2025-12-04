@@ -21,4 +21,15 @@ public interface HotelRepository extends CrudRepository<Hotel, Long> {
 
     List<Hotel> findHotelsByAmenities(String amenities);
 
+    @Query("SELECT h.brand, COUNT(h) FROM Hotel h GROUP BY h.brand")
+    List<Object[]> countHotelsByBrand();
+
+    @Query("SELECT h.address.city, COUNT(h) FROM Hotel h GROUP BY h.address.city")
+    List<Object[]> countHotelsByCity();
+
+    @Query("SELECT h.address.country, COUNT(h) FROM Hotel h GROUP BY h.address.country")
+    List<Object[]> countHotelsByCountry();
+
+    @Query("SELECT a, COUNT(h) FROM Hotel h JOIN h.amenities a GROUP BY a")
+    List<Object[]> countHotelsByAmenity();
 }
