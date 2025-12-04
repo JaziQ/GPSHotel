@@ -1,6 +1,7 @@
 package jazi.gpshotel.mapper;
 
-import jazi.gpshotel.model.dto.HotelDto;
+import jazi.gpshotel.model.dto.HotelFullDto;
+import jazi.gpshotel.model.dto.HotelShortDto;
 import jazi.gpshotel.model.entity.Address;
 import jazi.gpshotel.model.entity.Hotel;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Component
 public class Mapper {
 
-    public Hotel toEntity(HotelDto dto) {
+    public Hotel toEntity(HotelFullDto dto) {
         Hotel hotel = new Hotel();
         hotel.setName(dto.getName());
         hotel.setDescription(dto.getDescription());
@@ -21,24 +22,45 @@ public class Mapper {
         hotel.setArrivalTime(dto.getArrivalTime());
         hotel.setAmenities(Optional.ofNullable(dto.getAmenities())
                 .orElse(new ArrayList<>()));
-       return hotel;
+        return hotel;
     }
 
-    public HotelDto toFullDto(Hotel hotel) {
-        return HotelDto.createFullDto(hotel.getId(), hotel.getName(), hotel.getDescription(), hotel.getBrand(),
-                hotel.getAddress(), hotel.getContacts(), hotel.getArrivalTime(), hotel.getAmenities());
+    public HotelFullDto toFullDto(Hotel hotel) {
+        HotelFullDto dto = new HotelFullDto();
+        dto.setId(hotel.getId());
+        dto.setName(hotel.getName());
+        dto.setDescription(hotel.getDescription());
+        dto.setBrand(hotel.getBrand());
+        dto.setAddress(hotel.getAddress());
+        dto.setContacts(hotel.getContacts());
+        dto.setArrivalTime(hotel.getArrivalTime());
+        dto.setAmenities(hotel.getAmenities());
+        return dto;
     }
 
-    public HotelDto toShortDto(Hotel hotel) {
-        String formattedAddress = formatAddress(hotel.getAddress());
-        String phone = hotel.getContacts().getPhone();
+    public HotelShortDto toShortDto(Hotel hotel) {
+        HotelShortDto dto = new HotelShortDto();
+        dto.setId(hotel.getId());
+        dto.setName(hotel.getName());
+        dto.setDescription(hotel.getDescription());
 
-        return HotelDto.createShortDto(hotel.getId(), hotel.getName(),
-                hotel.getDescription(), formattedAddress, phone);
+        if (hotel.getAddress() != null) {
+            dto.setAddress(formatAddress(hotel.getAddress()));
+        }
+
+        if (hotel.getContacts() != null) {
+            dto.setPhone(hotel.getContacts().getPhone());
+        }
+
+        return dto;
     }
 
     private String formatAddress(Address address) {
-        return address.getHouseNumber() + " " + address.getStreet() + ", " +
-                address.getCity() + ", " + address.getPostalCode() + ", " + address.getCountry();
+        if (address != null) {
+            return address.getHouseNumber() + " " + address.getStreet() + ", " +
+                    address.getCity() + ", " + address.getPostCode() + ", " + address.getCountry();
+        } else {
+            return null;
+        }
     }
 }
