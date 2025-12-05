@@ -9,9 +9,11 @@ import java.util.List;
 @Repository
 public interface HotelRepository extends CrudRepository<Hotel, Long> {
 
-    List<Hotel> findHotelsByNameIgnoreCase(String name);
+    @Query("SELECT h FROM Hotel h WHERE LOWER(h.name) = LOWER(:name)")
+    List<Hotel> findHotelsByName(String name);
 
-    List<Hotel> findHotelsByBrandIgnoreCase(String brand);
+    @Query("SELECT h FROM Hotel h WHERE LOWER(h.brand) = LOWER(:brand)")
+    List<Hotel> findHotelsByBrand(String brand);
 
     @Query("SELECT h FROM Hotel h WHERE LOWER(h.address.city) = LOWER(:city)")
     List<Hotel> findHotelsByCity(String city);

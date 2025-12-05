@@ -75,10 +75,10 @@ public class HotelService {
         List<Hotel> hotels = new ArrayList<>();
 
         if (name != null) {
-            hotels = hotelRepository.findHotelsByNameIgnoreCase(name);
+            hotels = hotelRepository.findHotelsByName(name);
         }
         if (brand != null) {
-            hotels = hotelRepository.findHotelsByBrandIgnoreCase(brand);
+            hotels = hotelRepository.findHotelsByBrand(brand);
         }
         if (city != null) {
             hotels = hotelRepository.findHotelsByCity(city);
