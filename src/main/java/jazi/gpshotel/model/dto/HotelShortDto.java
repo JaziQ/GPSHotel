@@ -14,7 +14,7 @@ public class HotelShortDto {
     @NotNull
     private Long id;
 
-    @Schema(description = "Hotel name", example = "Grand Hotel Moscow", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Hotel name", example = "Grand Hotel Moscow")
     @NotBlank(message = "Name is mandatory")
     private String name;
 

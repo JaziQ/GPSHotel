@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jazi.gpshotel.model.dto.HotelFullDto;
 import jazi.gpshotel.model.dto.HotelShortDto;
 import jazi.gpshotel.service.HotelService;
@@ -46,6 +45,10 @@ public class HotelController {
     }
 
     @Operation(summary = "Create new Hotel")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Hotel created successfully",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = HotelFullDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data")})
     @PostMapping("/hotels")
     public ResponseEntity<HotelFullDto> createHotel(@RequestBody HotelFullDto hotelFullDto) {
         try {
@@ -58,10 +61,9 @@ public class HotelController {
 
     @Operation(summary = "Get hotel by id")
     @GetMapping("/hotels/{id}")
-    public ResponseEntity<HotelFullDto> getHotelById(@Parameter(
-            description = "Hotel id",
-            example = "123"
-    ) @PathVariable Long id) {
+    public ResponseEntity<HotelFullDto> getHotelById(
+            @Parameter(description = "Hotel id", example = "123")
+            @PathVariable Long id) {
         try {
             HotelFullDto hotel = hotelService.getHotelById(id);
             if (hotel == null) {
@@ -88,9 +90,8 @@ public class HotelController {
             @Parameter(description = "Country", example = "Belarus")
             @RequestParam(required = false) String country,
 
-            @Parameter(description = "List of amenities",
-                    example = "[\"Free WiFi\", \"Free parking\"]",
-                    schema = @Schema(type = "array", implementation = String.class))
+            @Parameter(description = "List of amenities", example = "[\"Free WiFi\", \"Free parking\"]",
+                    schema = @Schema(type = "array", example = "[\"Free WiFi\", \"Free parking\"]"))
             @RequestParam(required = false) List<String> amenities) {
 
         try {
@@ -110,6 +111,8 @@ public class HotelController {
     @PostMapping("/hotels/{id}/amenities")
     public ResponseEntity<HotelFullDto> addAmenities(
             @PathVariable Long id,
+            @Parameter(description = "List of amenities", example = "[\"Free WiFi\", \"Free parking\"]",
+                    schema = @Schema(type = "array", example = "[\"Free WiFi\", \"Free parking\"]"))
             @RequestBody List<String> amenities) {
         try {
             HotelFullDto hotelFullDto = hotelService.addAmenitiesToHotel(id, amenities);
@@ -126,14 +129,8 @@ public class HotelController {
     @ApiResponse(
             responseCode = "200",
             description = "Successful response",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(
-                            implementation = Map.class,
-                            example = "{\"Minsk\": 5, \"Moscow\": 3}"
-                    )
-            )
-    )
+            content = @Content( mediaType = "application/json",
+                    schema = @Schema(implementation = Map.class, example = "{\"Minsk\": 5, \"Moscow\": 3}")))
     @GetMapping("/histogram/{param}")
     public ResponseEntity<Map<String, Integer>> getHistogram(
             @Parameter(

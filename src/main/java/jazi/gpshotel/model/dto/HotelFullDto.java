@@ -33,21 +33,23 @@ public class HotelFullDto {
     @Size(max = 100, message = "Brand name cannot exceed 100 characters")
     private String brand;
 
-    @Schema(description = "Hotel address")
+    @Schema(description = "Hotel address", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "Address is mandatory")
     @Valid
     private Address address;
 
-    @Schema(description = "Contact information")
+    @Schema(description = "Contact information", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "Contacts are mandatory")
     @Valid
     private Contacts contacts;
 
-    @Schema(description = "Check-in, check-out time", example = "14:00")
+    @Schema(description = "Check-in, check-out time",
+            example = "{\"checkIn\": \"14:00\", \"checkOut\": \"12:00\"}",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @Valid
     private ArrivalTime arrivalTime;
 
-    @Schema(description = "List of amenities", example = "[\"Free parking\", \"Non-smoking rooms\"",
+    @Schema(description = "List of amenities", example = "[\"Free parking\", \"Non-smoking rooms\"] ",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<String> amenities;
 

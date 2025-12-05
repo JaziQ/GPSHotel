@@ -15,7 +15,7 @@ public class Hotel {
 
     @Schema(description = "Unique identifier", example = "123", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hotel_seq")  // ← SEQUENCE!
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hotel_seq")
     @SequenceGenerator(name = "hotel_seq", sequenceName = "HOTEL_SEQ", allocationSize = 1)
     private Long id;
 
@@ -43,7 +43,7 @@ public class Hotel {
     @Embedded
     private Contacts contacts;
 
-    @Schema(description = "Check-in and check-out times")
+    @Schema(description = "Check-in and check-out times", requiredMode = Schema.RequiredMode.REQUIRED)
     @Valid
     @Embedded
     private ArrivalTime arrivalTime;

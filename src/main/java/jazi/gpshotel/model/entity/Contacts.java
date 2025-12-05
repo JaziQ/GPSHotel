@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+@Schema(description = "Contact information")
 @Embeddable
 @Data
 public class Contacts {
@@ -17,7 +18,8 @@ public class Contacts {
             message = "Invalid phone number format")
     private String phone;
 
-    @Schema(description = "Email address", example = "doubletreeminsk.info@hilton.com")
+    @Schema(description = "Email address", example = "doubletreeminsk.info@hilton.com",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @Email(message = "Email should be valid")
     private String email;
 }

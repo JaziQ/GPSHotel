@@ -10,12 +10,14 @@ import lombok.Data;
 @Data
 public class ArrivalTime {
 
-    @Schema(description = "Check-in time", example = "14:00", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Check-in time", example = "14:00", pattern = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
             message = "Check-out time must be in format HH:MM (24-hour)")
     private String checkIn;
 
-    @Schema(description = "Check-out time", example = "12:00", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Check-out time (optional)", example = "12:00", pattern = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
             message = "Check-out time must be in format HH:MM (24-hour)")
     private String checkOut;
