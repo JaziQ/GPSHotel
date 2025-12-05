@@ -71,7 +71,7 @@ public class HotelService {
         return mapper.toFullDto(hotel);
     }
 
-    public List<HotelShortDto> searchHotels(String name, String brand, String city, String country, String amenity) {
+    public List<HotelShortDto> searchHotels(String name, String brand, String city, String country, List<String> amenities) {
         List<Hotel> hotels = new ArrayList<>();
 
         if (name != null) {
@@ -86,8 +86,8 @@ public class HotelService {
         if (country != null) {
             hotels = hotelRepository.findHotelsByCountry(country);
         }
-        if (amenity != null) {
-            hotels = hotelRepository.findHotelsByAmenities(amenity);
+        if (amenities != null) {
+            hotels = hotelRepository.findHotelsByAmenities(amenities, amenities.size());
         }
         return hotels.stream()
                 .map(mapper::toShortDto)

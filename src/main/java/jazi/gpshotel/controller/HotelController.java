@@ -64,11 +64,12 @@ public class HotelController {
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String country,
-            @RequestParam(required = false) String amenities) {
+            @RequestParam(required = false) List<String> amenities) {
 
         try {
-            if (name == null && brand == null && city == null && country == null && amenities == null) {
-                return ResponseEntity.badRequest().build();
+            if (name == null && brand == null && city == null && country == null
+                    && amenities == null) {
+                return ResponseEntity.badRequest().body(Collections.emptyList());
             }
             List<HotelShortDto> results = hotelService.searchHotels(name, brand, city, country, amenities);
             return ResponseEntity.ok(results);

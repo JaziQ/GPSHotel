@@ -19,7 +19,9 @@ public interface HotelRepository extends CrudRepository<Hotel, Long> {
     @Query("SELECT h FROM Hotel h WHERE LOWER(h.address.country) = LOWER(:country)")
     List<Hotel> findHotelsByCountry(String country);
 
-    List<Hotel> findHotelsByAmenities(String amenities);
+    @Query("SELECT h FROM Hotel h JOIN h.amenities a WHERE a IN :amenities " +
+            "GROUP BY h HAVING COUNT(DISTINCT a) = :amenitiesCount")
+    List<Hotel> findHotelsByAmenities(List<String> amenities, Integer amenitiesCount);
 
     @Query("SELECT h.brand, COUNT(h) FROM Hotel h GROUP BY h.brand")
     List<Object[]> countHotelsByBrand();
