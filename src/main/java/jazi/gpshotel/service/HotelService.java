@@ -53,7 +53,7 @@ public class HotelService {
     @Transactional
     public HotelFullDto addAmenitiesToHotel(Long id, List<String> amenities) {
         Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Hotel with id " + id + " not found"));
 
         if (amenities != null && !amenities.isEmpty()) {
             List<String> currentAmenities = hotel.getAmenities();
@@ -71,26 +71,21 @@ public class HotelService {
         return mapper.toFullDto(hotel);
     }
 
-    public List<HotelShortDto> searchHotels(String name, String brand, String city, String country, List<String> amenities) {
-        List<Hotel> hotels = new ArrayList<>();
+    public List<HotelShortDto> searchHotels(String name, String brand, String city,
+                                            String country, List<String> amenities) {
 
-        if (name != null) {
-            hotels = hotelRepository.findHotelsByName(name);
+        boolean isParamsEmpty = (name == null || name.isEmpty()) && (brand == null || brand.isEmpty())
+                && (city == null || city.isEmpty()) && (country == null || country.isEmpty())
+                && (amenities == null || amenities.isEmpty());
+
+        if (isParamsEmpty) {
+            return getAllHotelsShort();
+        } else {
+            Integer amenitiesCount = (amenities != null) ? amenities.size() : 0;
+            List<Hotel> hotels = hotelRepository.findHotelsByParams(name, brand, city, country, amenities, amenitiesCount);
+            return hotels.stream()
+                    .map(mapper::toShortDto)
+                    .toList();
         }
-        if (brand != null) {
-            hotels = hotelRepository.findHotelsByBrand(brand);
-        }
-        if (city != null) {
-            hotels = hotelRepository.findHotelsByCity(city);
-        }
-        if (country != null) {
-            hotels = hotelRepository.findHotelsByCountry(country);
-        }
-        if (amenities != null) {
-            hotels = hotelRepository.findHotelsByAmenities(amenities, amenities.size());
-        }
-        return hotels.stream()
-                .map(mapper::toShortDto)
-                .toList();
     }
 }
