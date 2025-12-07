@@ -1,6 +1,6 @@
 package jazi.gpshotel.service;
 
-import jakarta.persistence.EntityNotFoundException;
+import jazi.gpshotel.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jazi.gpshotel.mapper.Mapper;
@@ -39,21 +39,22 @@ public class HotelService {
 
     public HotelFullDto getHotelById(Long id) {
         Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel with id " + id + " not found"));
         return mapper.toFullDto(hotel);
     }
 
     @Transactional
     public void deleteHotelById(Long id) {
-        Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel with id " + id + " not found"));
-        hotelRepository.deleteById(hotel.getId());
+        if (!hotelRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Hotel with id " + id + " not found. Not deleted.");
+        }
+        hotelRepository.deleteById(id);
     }
 
     @Transactional
     public HotelFullDto addAmenitiesToHotel(Long id, List<String> amenities) {
         Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel with id " + id + " not found"));
 
         if (amenities != null && !amenities.isEmpty()) {
             List<String> currentAmenities = hotel.getAmenities();

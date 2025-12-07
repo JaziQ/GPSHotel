@@ -5,9 +5,7 @@ import jazi.gpshotel.model.dto.HotelShortDto;
 import jazi.gpshotel.model.entity.Address;
 import jazi.gpshotel.model.entity.Hotel;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Component
 public class Mapper {
@@ -20,8 +18,11 @@ public class Mapper {
         hotel.setAddress(dto.getAddress());
         hotel.setContacts(dto.getContacts());
         hotel.setArrivalTime(dto.getArrivalTime());
-        hotel.setAmenities(Optional.ofNullable(dto.getAmenities())
-                .orElse(new ArrayList<>()));
+        if (dto.getAmenities() != null) {
+            hotel.setAmenities(dto.getAmenities());
+        } else {
+            hotel.setAmenities(new ArrayList<>());
+        }
         return hotel;
     }
 
