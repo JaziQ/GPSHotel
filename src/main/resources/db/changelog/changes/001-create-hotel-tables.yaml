@@ -3,17 +3,13 @@ databaseChangeLog:
       id: 001-create-hotel-tables
       author: developer
       changes:
-        - createSequence:
-            sequenceName: HOTEL_SEQ
-            startValue: 1
-            incrementBy: 1
         - createTable:
             tableName: hotel
-            schemaName: PUBLIC
             columns:
               - column:
                   name: id
                   type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -24,7 +20,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: description
-                  type: TEXT
+                  type: VARCHAR(2000)
               - column:
                   name: brand
                   type: VARCHAR(100)

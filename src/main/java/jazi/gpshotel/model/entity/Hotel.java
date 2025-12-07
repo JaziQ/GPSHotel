@@ -15,11 +15,10 @@ public class Hotel {
 
     @Schema(description = "Unique identifier", example = "123", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hotel_seq")
-    @SequenceGenerator(name = "hotel_seq", sequenceName = "HOTEL_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Schema(description = "Hotel name", example = "Grand Hotel Moscow", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Hotel name", example = "Hilton Hotel Minsk", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Hotel name is mandatory")
     private String name;
 
@@ -48,6 +47,8 @@ public class Hotel {
     @Embedded
     private ArrivalTime arrivalTime;
 
+
+    //TODO: use set instead of list
     @Schema(description = "List of amenities", example = "[\"Free parking\", \"Non-smoking rooms\"")
     @ElementCollection
     @CollectionTable(name = "hotel_amenities", joinColumns = @JoinColumn(name = "hotel_id"))

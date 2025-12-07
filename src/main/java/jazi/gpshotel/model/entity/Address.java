@@ -13,7 +13,7 @@ import lombok.Data;
 public class Address {
 
     @Schema(description = "House number", example = "9", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "Street is mandatory")
+    @NotNull(message = "House number is mandatory")
     @Positive(message = "House number must be positive")
     private Integer houseNumber;
 
