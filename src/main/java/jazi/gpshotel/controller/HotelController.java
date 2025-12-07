@@ -10,6 +10,7 @@ import jazi.gpshotel.model.dto.HotelFullDto;
 import jazi.gpshotel.model.dto.HotelShortDto;
 import jazi.gpshotel.service.HotelService;
 import jazi.gpshotel.service.HotelStatisticsService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,19 +37,25 @@ public class HotelController {
         return ResponseEntity.ok(hotels);
     }
 
-    @Operation(summary = "Create new Hotel")
-    @ApiResponse(
-            responseCode = "201",
-            description = "Hotel created successfully",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = HotelFullDto.class)))
+    @Operation(summary = "Create new Hotel",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Hotel created successfully",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = HotelFullDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Validation error")
+            })
     @PostMapping("/hotels")
-    public ResponseEntity<HotelFullDto> createHotel(@RequestBody HotelFullDto hotelFullDto) {
+    public ResponseEntity<HotelFullDto> createHotel(@Valid @RequestBody HotelFullDto hotelFullDto) {
         HotelFullDto createdHotel = hotelService.createHotel(hotelFullDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdHotel);
     }
 
-    @Operation(summary = "Get hotel by id")
+    @Operation(summary = "Get hotel by id",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Hotel found",
+                            content = @Content(schema = @Schema(implementation = HotelFullDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Hotel not found")
+            })
     @GetMapping("/hotels/{id}")
     public ResponseEntity<HotelFullDto> getHotelById(
             @Parameter(description = "Hotel id", example = "123")
@@ -62,38 +69,40 @@ public class HotelController {
     public ResponseEntity<List<HotelShortDto>> searchHotels(
             @Parameter(description = "Name", example = "DoubleTree by Hilton Minsk")
             @RequestParam(required = false) String name,
-
             @Parameter(description = "Brand", example = "Hilton")
             @RequestParam(required = false) String brand,
-
             @Parameter(description = "City", example = "Minsk")
             @RequestParam(required = false) String city,
-
             @Parameter(description = "Country", example = "Belarus")
             @RequestParam(required = false) String country,
-
             @Parameter(description = "List of amenities", example = "[\"Free WiFi\", \"Free parking\"]",
                     schema = @Schema(type = "array", example = "[\"Free WiFi\", \"Free parking\"]"))
             @RequestParam(required = false) List<String> amenities) {
 
-        List<HotelShortDto> results =
-                hotelService.searchHotels(name, brand, city, country, amenities);
+        List<HotelShortDto> results = hotelService.searchHotels(name, brand, city, country, amenities);
         return ResponseEntity.ok(results);
     }
 
-    @Operation(summary = "Add amenities list to hotel by id")
+    @Operation(summary = "Add amenities list to hotel by id",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Amenities added successfully",
+                            content = @Content(schema = @Schema(implementation = HotelFullDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Validation error"),
+                    @ApiResponse(responseCode = "404", description = "Hotel not found")
+            })
     @PostMapping("/hotels/{id}/amenities")
     public ResponseEntity<HotelFullDto> addAmenities(
             @PathVariable Long id,
-            @Parameter(description = "List of amenities", example = "[\"Free WiFi\", \"Free parking\"]",
-                    schema = @Schema(type = "array", example = "[\"Free WiFi\", \"Free parking\"]"))
             @RequestBody List<String> amenities) {
-
         HotelFullDto hotelFullDto = hotelService.addAmenitiesToHotel(id, amenities);
         return ResponseEntity.ok(hotelFullDto);
     }
 
-    @Operation(summary = "Get hotels count by parameter")
+    @Operation(summary = "Get hotels count by parameter",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Histogram retrieved successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid parameter")
+            })
     @GetMapping("/histogram/{param}")
     public ResponseEntity<Map<String, Integer>> getHistogram(
             @Parameter(
@@ -101,12 +110,15 @@ public class HotelController {
                     example = "city",
                     schema = @Schema(allowableValues = {"brand", "city", "country", "amenities"}))
             @PathVariable String param) {
-
         Map<String, Integer> result = hotelStatisticsService.getHistogram(param);
         return ResponseEntity.ok(result);
     }
 
-    @Operation(summary = "Deleting an entity by id")
+    @Operation(summary = "Deleting an entity by id",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Hotel deleted successfully"),
+                    @ApiResponse(responseCode = "404", description = "Hotel not found")
+            })
     @DeleteMapping("/hotels/{id}")
     public ResponseEntity<Void> deleteHotelById(@PathVariable Long id) {
         hotelService.deleteHotelById(id);
