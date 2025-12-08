@@ -17,7 +17,6 @@ import java.util.List;
 public class HotelFullDto {
 
     @Schema(description = "Unique hotel identifier", example = "123")
-    @NotNull
     private Long id;
 
     @Schema(description = "Hotel name", example = "DoubleTree by Hilton Minsk", requiredMode = Schema.RequiredMode.REQUIRED)
