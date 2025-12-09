@@ -91,11 +91,11 @@ public class HotelController {
                     @ApiResponse(responseCode = "404", description = "Hotel not found")
             })
     @PostMapping("/hotels/{id}/amenities")
-    public ResponseEntity<Void> addAmenities(
+    public ResponseEntity<HotelFullDto> addAmenities(
             @PathVariable Long id,
             @RequestBody List<String> amenities) {
-        hotelService.addAmenitiesToHotel(id, amenities);
-        return ResponseEntity.ok().build();
+        HotelFullDto hotelFullDto = hotelService.addAmenitiesToHotel(id, amenities);
+        return ResponseEntity.ok(hotelFullDto);
     }
 
     @Operation(summary = "Get hotels count by parameter",
