@@ -20,4 +20,5 @@ mvn spring-boot:run
 ```
 
 ## To use MySQL database
+
 #### Comment H2 section and uncomment MySQL section in application.properties
