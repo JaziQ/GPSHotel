@@ -1,6 +1,6 @@
 ## Tech Stack
-- Java 25
-- Spring Boot 4.0.0
+- Java 21
+- Spring Boot 3.2.0
 - Spring Data JPA
 - H2 Database (in-memory, default)
 - MySQL(optional)
